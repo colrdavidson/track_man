@@ -52,6 +52,9 @@ def main():
         input_data = f.readline()
 
         if '@' in input_data:
+            print("\nHeat {}\n---------".format(heat + 1))
+
+            car_list = []
             positions = input_data[1:].split(',')
             for position in positions:
                 track_id = position[0]
@@ -61,9 +64,16 @@ def main():
                 car = heat_map[heat][track_id]
                 car.track_time = track_time
                 car.position = position
+                car_list.append([car, track_id])
+            car_list = sorted(car_list, key=lambda x: x[0].position)
+            for elem in car_list:
+                car = elem[0]
+                track_id = elem[1]
+                print("Car {}, Track {}, Time {}, Position {}".format(car.car_id, track_id, car.track_time, car.position))
 
             heat += 1
 
+    print("")
     total_car_times = {}
 
     for heat in heat_map:
@@ -74,6 +84,6 @@ def main():
                 total_car_times[car.car_id] += car.track_time
 
     for car_id in sorted(total_car_times, key=total_car_times.get):
-        print("Car: {}, total time {:.3f}".format(car_id, total_car_times[car_id]))
+        print("Car: {}, total time {:.3f}, average time {:.3f}".format(car_id, total_car_times[car_id], total_car_times[car_id] / len(heat_map)))
         
 main()
